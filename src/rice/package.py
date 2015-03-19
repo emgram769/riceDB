@@ -110,7 +110,7 @@ class Package(object):
                       raise error.corruption_error("Could not find the files specified in the rice")
                   os.rename(os.expanduser(self.conf_root + self.Files[k] + k), './' + k)
           # else:
-              # TODO - Get switchout working for a local rice
+          # TODO - Get switchout working for a local rice
 
       def switch_in():
           os.chdir(self.path)
