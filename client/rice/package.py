@@ -36,33 +36,26 @@ class Package(object):
           if ("Images" in self.data):
               self.images = self.data["Images"]
 
+          if ("Description" in self.data):
+              self.description = self.data["Description"]
+
           if ("Program" in self.data):
               self.program = self.data["Program"]
           else:
               raise error.corruption_error("Could not determine the program of the package")
 
-          if ("Files" in self.data):
-              self.files = self.data["Files"]
-          else:
-              raise error.corruption_error("Could not determine the files of the package")
-
-          if ("Path" in self.data):
-              self.conf_root = self.data["Path"]
-          else:
-              raise error.corruption_error("Could not determine the installation location of the package")
-
           self.prog_path = util.RDBDIR + self.program
-          self.path = util.RBBDIR + self.program + '/'+ self.name
+          self.path = util.RDBDIR + self.program + '/'+ self.name
           self.install_file = self.path + INSTALL
 
       def download(self):
           # Get the path of the download
           if not (os.path.exists(util.RDBDIR) and os.path.isdir(util.RDBDIR)):
               os.mkdir(util.RDBDIR)
-          if not (os.path.exists(prog_path)):
-              os.mkdir(prog_path)
-          if (os.path.exists(path) and os.path.isdir(path)):
-              raise error.Error("Path ("+path+") already exists.")
+          if not (os.path.exists(self.prog_path)):
+              os.mkdir(self.prog_path)
+          if (os.path.exists(self.path) and os.path.isdir(self.path)):
+              raise error.Error("Path ("+self.path+") already exists.")
           # Download the file
           temp_file = self.prog_path + TMPEXTENSION
           urllib.request.urlretrieve(self.url, temp_file)
@@ -72,7 +65,7 @@ class Package(object):
           # Unzip the file
           z = zipfile.zip_file(temp_file)
           for name in z.namelist():
-              z.extract(name, path)
+              z.extract(name, self.path)
           os.remove(temp_file)
           with open(self.install_file, 'w') as fout:
               json.dump(self.data, fout)
@@ -81,10 +74,9 @@ class Package(object):
       def install(self):
           if not self.downloaded:
               raise error.Error("Package is not downloaded.")
-          install_file = path + INSTALL
-          if not (os.path.exists(install_file) and os.path.isfile(install_file)):
+          if not (os.path.exists(self.install_file) and os.path.isfile(self.install_file)):
               raise error.corruption_error("Package has no install file.")
-          with open(install_file) as f:
+          with open(self.install_file) as f:
               try:
                   self.install_data = json.load(f)
               except Exception as e:

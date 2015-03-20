@@ -11,30 +11,30 @@ class MyServer(BaseHTTPRequestHandler):
     self.send_header("Content-type", "application/json")
     self.end_headers()
     #self.path
-    out = []
-    out += ["""[
+    out = """[
 {
-  "Name": "test repo",
+  "Name": "%s repo",
+  "Program": "i3",
   "Description": "This is a sample of the description field.",
   "URL": "http://localhost:8000/test.zip",
   "Images": ["http://localhost:8000/test.jpg"]
-}
-]"""]
-    out += ["""[
-{
-  "Name": "test repo 1",
-  "URL": "http://localhost/test.zip"
 },
 {
-  "Name": "test repo 2",
-  "URL": "http://localhost/test.zip"
+  "Name": "%s repo 2",
+  "Program": "i3",
+  "Description": "Does this description thing work?.",
+  "URL": "http://localhost:8000/test.zip",
+  "Images": ["http://localhost:8000/test2.jpg"]
 },
 {
-  "Name": "test repo 3",
-  "URL": "http://localhost/test.zip"
+  "Name": "%s repo 3",
+  "Program": "i3",
+  "Description": "test.",
+  "URL": "http://localhost:8000/test.zip",
+  "Images": ["http://localhost:8000/test3.png"]
 }
-]"""]
-    self.wfile.write(bytes(out[random.randint(0,1)], "utf-8"))
+]""" % (self.path[1:], self.path[1:], self.path[1:])
+    self.wfile.write(bytes(out, "utf-8"))
 
 myServer = HTTPServer((hostName, hostPort), MyServer)
 print(time.asctime(), "Server Starts - %s:%s" % (hostName, hostPort))
