@@ -4,6 +4,7 @@
 #
 
 import urllib.request
+import urllib.parse
 import json
 import os
 from rice import error, util, package
@@ -19,8 +20,9 @@ class Query(object):
             raise error.corruption_error("Invalid JSON: %s" %(e))
       else:
         config = dict()
-        config["dbs"] = ["http://bwasti.com:9000/"]
+        config["dbs"] = ["http://192.249.58.243:9000/"]
       try:
+        query = urllib.parse.quote_plus(query)
         request = urllib.request.Request(config["dbs"][0] + query)
         response = urllib.request.urlopen(request).read().decode('utf-8')
       except Exception as e:
