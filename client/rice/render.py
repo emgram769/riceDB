@@ -67,10 +67,11 @@ class Renderer(object):
                   self.draw_image(temp_file, x, y, w, h)
               except Exception as e:
                   # Who cares? it's just a picture.
-                  print(str(e))
+                  #print(str(e))
                   pass
           # Write the description if there is one
           if not result.description == None:
+              self.scr.addstr(SEARCHBAR_OFFSET, curses.COLS//2, "".join([" " for i in range(curses.COLS//2)]))
               self.scr.addstr(SEARCHBAR_OFFSET, curses.COLS//2, result.description)
 
           # Do we need to redraw the results?
@@ -83,6 +84,7 @@ class Renderer(object):
           if self.index == -1:
               try:
                   self.textarea.erase()
+                  curses.curs_set(1)
                   query_string = self.text.edit().strip()
                   if query_string == "exit":
                       self.end()
@@ -90,6 +92,7 @@ class Renderer(object):
                   self.results = query.Query(query_string).get_results()
                   self.populate(self.results)
                   #self.index = 0 # Set selection to first result
+                  curses.curs_set(0)
                   self.handle_scroll("KEY_DOWN")
               except Exception as e:
                   print(str(e))

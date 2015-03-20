@@ -24,7 +24,7 @@ class Query(object):
         request = urllib.request.Request(config["dbs"][0] + query)
         response = urllib.request.urlopen(request).read().decode('utf-8')
       except Exception as e:
-        raise error.Error("Could not connect to server %s: %s" % (config["db"], e))
+        raise error.Error("Could not connect to server %s: %s" % (config["dbs"], e))
       try:
         self.results = json.loads(response)
       except Exception as e:
